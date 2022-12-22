@@ -46,9 +46,16 @@ impl Config {
         match args.next() {
             Some(arg) => {
                 // TODO: How can I mock this?
-                // TODO: Check if this is a dir path or a file path
                 file_path = PathBuf::from(arg);
                 if !file_path.exists() {
+                    eprintln!("File path is not valid.");
+                    return Err(ConfigParserError::FileNotFound)?;
+                }
+                if file_path.is_dir() {
+                    is_dir = true;
+                }
+                else if !file_path.is_file() {
+                    eprintln!("File path is neither directory nor file.");
                     return Err(ConfigParserError::FileNotFound)?;
                 }
             }
